@@ -11,10 +11,19 @@ module.exports = () => {
   });
 
   // 각 요청마다 실행함
-  passport.deserializeUser((id, done) => {
-    User.findOne({ where: { id } })
-      .then((user) => done(null, user))
-      .catch((err) => done(err));
+  passport.deserializeUser(async (id, done) => {
+    try {
+      const user = await User.findOne({
+        where: { id },
+        include: [
+          { model: User, attributes: ["id", "nick"], as: "Followers" },
+          { model: User, attributes: ["id", "nick"], as: "Followings" },
+        ],
+      });
+      done(null, user);
+    } catch (error) {
+      done(err);
+    }
   });
 
   local();

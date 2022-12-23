@@ -11,10 +11,11 @@ exports.renderMain = async (req, res, next) => {
     const posts = await Post.findAll({
       include: {
         model: User,
-        attribute: ["id", "nick"],
+        attributes: ["id", "nick"],
       },
-      order: [["createdAt", "DESC"]],
+      order: [["createdAt", "asc"]],
     });
+
     res.render("main", {
       title: "NodeBird",
       twits: posts,

@@ -11,6 +11,8 @@ dotenv.config();
 const pageRouter = require("./routes/page");
 const authRouter = require("./routes/auth");
 const postRouter = require("./routes/post");
+const userRouter = require("./routes/user");
+
 const { sequelize } = require("./models");
 const passportConfig = require("./passport");
 
@@ -21,9 +23,7 @@ app.set("view engine", "html");
 nunjucks.configure("views", { express: app, watch: true });
 sequelize
   .sync({ force: false }) // force : true면 node시작 시 전체 테이블 삭제 후 재생성ㅎ마
-  .then(() => {
-    console.log("데이터베이스 연결 성공");
-  })
+  .then(() => {})
   .catch((err) => {
     console.error(err);
   });
@@ -55,6 +55,7 @@ app.use(passport.session());
 app.use("/", pageRouter);
 app.use("/auth", authRouter);
 app.use("/post", postRouter);
+app.use("/user", userRouter);
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
@@ -69,6 +70,4 @@ app.use((err, req, res, next) => {
   res.render("error");
 });
 
-app.listen(app.get("port"), () => {
-  console.log(app.get("port"), "번 포트에서 대기 중");
-});
+app.listen(app.get("port"), () => {});
