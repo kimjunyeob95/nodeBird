@@ -10,6 +10,7 @@ const passport = require("passport");
 dotenv.config();
 const pageRouter = require("./routes/page");
 const authRouter = require("./routes/auth");
+const postRouter = require("./routes/post");
 const { sequelize } = require("./models");
 const passportConfig = require("./passport");
 
@@ -31,6 +32,7 @@ sequelize
 app.use(morgan("dev"));
 // 파일 경로 모듈 /test/img.png 로 요청 시 /public/test/img.png 경로로 추적
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/img", express.static(path.join(__dirname, "uploads")));
 // json 형식 해석
 app.use(express.json());
 // x-www-form-urlencoded 형식 해석
@@ -52,6 +54,7 @@ app.use(passport.session());
 
 app.use("/", pageRouter);
 app.use("/auth", authRouter);
+app.use("/post", postRouter);
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
